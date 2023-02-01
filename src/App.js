@@ -10,11 +10,12 @@ import {Button, Row} from 'react-bootstrap';
 import StrictModeDroppable from './StrictModeDroppable';
 import { FaTrashAlt } from 'react-icons/fa';
 import Mob from './mob'
-
+import uuid from 'react-uuid'
 
 export default class App extends React.Component {
   state = floorData
 
+  mobBarState = mobData  
   onDragEnd = result => {
     const { destination, source, draggableId } = result;
 
@@ -59,7 +60,34 @@ export default class App extends React.Component {
       return;
     }
 
+    if(source.droppableId === "999" && destination.droppableId !== "999"){
+
+      const src_mob_id = draggableId.substr(-4);
+      
+      const new_mod_id = 's0t' + destination.droppableId + src_mob_id
+
+      console.log(new_mod_id)
+      const finishMobs = Array.from(finish.mobs);
+      finishMobs.splice(destination.index, 0, new_mod_id);
+      const newFinish = {
+        ...finish,
+        mobs: finishMobs,
+      };
+
+      const newState = {
+        ...this.state,
+          [newFinish.floor_no  - 1]: newFinish,
+
+      };      
+      this.setState(newState);
+
+      return;
+
+    }
+
+
     // Moving from one list to another
+    
     const startTaskIds = Array.from(start.mobs);
     startTaskIds.splice(source.index, 1);
     const newStart = {
@@ -99,6 +127,12 @@ export default class App extends React.Component {
 
   };
 
+  onFilter = (event) =>{
+    const filter_text = event.target.value
+    const newMobBar = this.mobBarState.filter( o=> o.name.includes(filter_text) )
+    console.log(newMobBar)
+  }
+
   render() {
     return (
       <DragDropContext
@@ -108,7 +142,9 @@ export default class App extends React.Component {
       >
         
         <div class="row sticky-top bg-white" style={{border:'1px solid lightgrey',height:'80px',marginBottom:'20px',paddingTop:'10px'}}>
-                <div class="col-md-2" style={{borderRight:'1px solid lightgrey',height:'70px'}}>Search</div>
+                <div class="col-md-2" style={{borderRight:'1px solid lightgrey',height:'70px'}}>
+                  <input style={{width:'100%'}} onChange={this.onFilter}/>
+                </div>
                 <StrictModeDroppable droppableId={"999"} direction='horizontal'>
                           {
                               (provided)=>(
@@ -118,9 +154,9 @@ export default class App extends React.Component {
                                 {...provided.droppableProps}>
                                   
                                   {/* {mobData.map( (m,i)=> <h3>{m.id}</h3> )} */}
-                                  {mobData.sort( (a,b) => (parseInt(a.level) > parseInt(b.level)) ? 1:-1).map(
+                                  {this.mobBarState.sort( (a,b) => (parseInt(a.level) > parseInt(b.level)) ? 1:-1).map(
                                     
-                                    (m,i)=> <Mob id={m.id} key={m.id} mob_id={m.id} index={i}  showName={false} showLevel={false} thumbSize='35px'></Mob> )}
+                                    (m,i)=> <Mob id={'s0t0m' + m.id} key={m.id} mob_id={m.id} index={i}  showName={false} showLevel={false} thumbSize='35px'></Mob> )}
                                   {provided.placeholder}
                                 </div>
                               )

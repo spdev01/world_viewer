@@ -21,7 +21,8 @@ const BigContainer = styled.div`
 
 
 export default class Mob extends Component {
-  curr_mob = mobData.find(x=> x.id === this.props.mob_id)
+  sliced_mob_id = this.props.mob_id.substr(-4);
+  curr_mob = mobData.find(x=> x.id === this.sliced_mob_id)
 
   render() {
     return (
@@ -34,7 +35,7 @@ export default class Mob extends Component {
               ref={provided.innerRef}
             >
                 <div className="">
-                  <img src={'/mobs/' + this.curr_mob.id + '.png'} style={{height:this.props.thumbSize}}/>
+                  <img src={'/mobs/' + this.curr_mob.id + '.png'} style={{height:this.props.thumbSize}} alt={this.curr_mob.name}/>
                   {
                     this.props.showLevel && 'lvl:' + this.curr_mob.level
 

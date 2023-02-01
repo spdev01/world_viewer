@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Mob from './mob'
 import {Row,Col,Container} from 'react-bootstrap';
 import StrictModeDroppable from './StrictModeDroppable';
-
+import uuid from 'react-uuid'
 
 const Title = styled.h5`
 padding: 8x`;
@@ -48,7 +48,7 @@ export default class Floor extends Component {
                                     ref={provided.innerRef}
                                     {...provided.droppableProps}
                                 >
-                                    {this.props.floor.mobs.map( (m,i)=><Mob id={m} key={m} mob_id={m} index={i}  showName={true} showLevel={true} thumbSize="40px"></Mob> )}
+                                    {this.props.floor.mobs.map( (m,i)=><Mob id={'s' + this.props.floor.floor_no + 't' + this.props.floor.floor_no + 'm' + m} key={m} mob_id={m} index={i}  showName={true} showLevel={true} thumbSize="40px"></Mob> )}
                                     {provided.placeholder}
                                 </MobList>
                             )
