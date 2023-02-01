@@ -8,9 +8,10 @@ import {DragDropContext} from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import {Button, Row} from 'react-bootstrap';
 import StrictModeDroppable from './StrictModeDroppable';
-import { FaTrashAlt } from 'react-icons/fa';
+import { FaTrashAlt, FaBars,FaFileDownload,FaFileUpload } from 'react-icons/fa';
 import Mob from './mob'
-import uuid from 'react-uuid'
+import { Fab, Action } from 'react-tiny-fab';
+import 'react-tiny-fab/dist/styles.css';
 
 export default class App extends React.Component {
 
@@ -18,6 +19,26 @@ export default class App extends React.Component {
   {
     floorState:floorData,
     mobBarState:mobData
+  }
+  onClickExport = (event) =>{
+    const element = document.createElement("a");
+    const file = new Blob([JSON.stringify(this.state, null, 2)], { type: "application/json" });
+    element.href = URL.createObjectURL(file);
+    element.download = "exported_state.json";
+    document.body.appendChild(element);
+    element.click();
+  }
+  onClickImport = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const content = event.target.result;
+      console.log(content);
+      // do something with the content
+      this.setState(JSON.parse(content))
+    };
+    reader.readAsText(file);
+
   }
 
   mobBarState = mobData  
@@ -61,7 +82,7 @@ export default class App extends React.Component {
         
       };
 
-      this.setState({...this.state.mobBarState,floorState:newState});
+      this.setState({mobBarState:this.state.mobBarState,floorState:newState});
       return;
     }
 
@@ -84,7 +105,7 @@ export default class App extends React.Component {
           [newFinish.floor_no  - 1]: newFinish,
 
       };      
-      this.setState({...this.state.mobBarState,floorState:newState});
+      this.setState({mobBarState:this.state.mobBarState,floorState:newState});
 
       return;
 
@@ -117,7 +138,7 @@ export default class App extends React.Component {
           [newFinish.floor_no  - 1]: newFinish,
 
       };      
-      this.setState({...this.state.mobBarState,floorState:newState});
+      this.setState({mobBarState:this.state.mobBarState,floorState:newState});
     }
     else
     {
@@ -126,7 +147,7 @@ export default class App extends React.Component {
           [newStart.floor_no - 1]: newStart
 
       };      
-      this.setState({...this.state.mobBarState,floorState:newState});
+      this.setState({mobBarState:this.state.mobBarState,floorState:newState});
 
     }
 
@@ -135,7 +156,7 @@ export default class App extends React.Component {
   onFilter = (event) =>{
     const filter_text = event.target.value
     const newMobBar = this.mobBarState.filter( o=> o.name.includes(filter_text) )
-    this.setState({...this.state.floorState,mobBarState:newMobBar})
+    this.setState({floorState:this.state.floorState,mobBarState:newMobBar})
   }
 
   render() {
@@ -201,6 +222,25 @@ export default class App extends React.Component {
           })
           }
       </Row>
+      <Fab
+          icon={<FaBars />}
+        >
+          <Action
+            text="Import"
+            onClick={this.handleFileUpload}
+          >
+            <input type="file" onChange={this.onClickImport} text=''/>
+            <FaFileDownload />
+          </Action>
+          <Action
+              text="Export"
+              onClick={this.onClickExport}
+            >
+            <FaFileUpload />
+          </Action>
+
+        </Fab>
+
       </DragDropContext>
 
     );
