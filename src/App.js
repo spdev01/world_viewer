@@ -118,7 +118,9 @@ export default class App extends React.Component {
                                 {...provided.droppableProps}>
                                   
                                   {/* {mobData.map( (m,i)=> <h3>{m.id}</h3> )} */}
-                                  {mobData.map( (m,i)=> <Mob id={m.id} key={m.id} mob_id={m.id} index={i}  showName={false} showLevel={false} thumbSize='35px'></Mob> )}
+                                  {mobData.sort( (a,b) => (parseInt(a.level) > parseInt(b.level)) ? 1:-1).map(
+                                    
+                                    (m,i)=> <Mob id={m.id} key={m.id} mob_id={m.id} index={i}  showName={false} showLevel={false} thumbSize='35px'></Mob> )}
                                   {provided.placeholder}
                                 </div>
                               )
