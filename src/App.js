@@ -13,7 +13,12 @@ import Mob from './mob'
 import uuid from 'react-uuid'
 
 export default class App extends React.Component {
-  state = floorData
+
+  state = 
+  {
+    floorState:floorData,
+    mobBarState:mobData
+  }
 
   mobBarState = mobData  
   onDragEnd = result => {
@@ -32,8 +37,8 @@ export default class App extends React.Component {
       return;
     }
 
-    const start = this.state[source.droppableId -1];
-    const finish = this.state[destination.droppableId -1];
+    const start = this.state.floorState[source.droppableId -1];
+    const finish = this.state.floorState[destination.droppableId -1];
 
 
     if (start === finish) {
@@ -51,12 +56,12 @@ export default class App extends React.Component {
       };
 
       const newState = {
-        ...this.state,
+        ...this.state.floorState,
         [newFloor.floor_no - 1]: newFloor,
         
       };
 
-      this.setState(newState);
+      this.setState({...this.state.mobBarState,floorState:newState});
       return;
     }
 
@@ -75,11 +80,11 @@ export default class App extends React.Component {
       };
 
       const newState = {
-        ...this.state,
+        ...this.state.floorState,
           [newFinish.floor_no  - 1]: newFinish,
 
       };      
-      this.setState(newState);
+      this.setState({...this.state.mobBarState,floorState:newState});
 
       return;
 
@@ -107,21 +112,21 @@ export default class App extends React.Component {
       };
 
       const newState = {
-        ...this.state,
+        ...this.state.floorState,
           [newStart.floor_no - 1]: newStart,
           [newFinish.floor_no  - 1]: newFinish,
 
       };      
-      this.setState(newState);
+      this.setState({...this.state.mobBarState,floorState:newState});
     }
     else
     {
       const newState = {
-        ...this.state,
+        ...this.state.floorState,
           [newStart.floor_no - 1]: newStart
 
       };      
-      this.setState(newState);
+      this.setState({...this.state.mobBarState,floorState:newState});
 
     }
 
@@ -130,7 +135,7 @@ export default class App extends React.Component {
   onFilter = (event) =>{
     const filter_text = event.target.value
     const newMobBar = this.mobBarState.filter( o=> o.name.includes(filter_text) )
-    console.log(newMobBar)
+    this.setState({...this.state.floorState,mobBarState:newMobBar})
   }
 
   render() {
@@ -154,7 +159,7 @@ export default class App extends React.Component {
                                 {...provided.droppableProps}>
                                   
                                   {/* {mobData.map( (m,i)=> <h3>{m.id}</h3> )} */}
-                                  {this.mobBarState.sort( (a,b) => (parseInt(a.level) > parseInt(b.level)) ? 1:-1).map(
+                                  {this.state.mobBarState.sort( (a,b) => (parseInt(a.level) > parseInt(b.level)) ? 1:-1).map(
                                     
                                     (m,i)=> <Mob id={'s0t0m' + m.id} key={m.id} mob_id={m.id} index={i}  showName={false} showLevel={false} thumbSize='35px'></Mob> )}
                                   {provided.placeholder}
@@ -189,7 +194,7 @@ export default class App extends React.Component {
         <Row className='floor-parent' style={{marginTop:'0px',marginLeft:'0px',marginRight:'0px',width: '100%'}}>
           {
             Array(100).fill().map( (x,floor_no) =>{
-            const flr = this.state[floor_no]
+            const flr = this.state.floorState[floor_no]
             const mobsInFloor = flr.mobs
             return <Floor key={String(flr.floor_no)} floor={flr} mobs={flr.mobs} ></Floor>
       
