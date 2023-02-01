@@ -37,10 +37,10 @@ export default class Floor extends Component {
 
             </Row>
             <Row>
-                <Col xs={6}>
+                <Col xs={5}>
                     <Img src={'/maps/' + this.props.floor.name + '.png'}/>
                 </Col>
-                <Col xs={6}>
+                <Col xs={7}>
                     <StrictModeDroppable droppableId={String(this.props.floor.floor_no)} direction='vertical'>
                         {
                             (provided)=>(
@@ -48,7 +48,7 @@ export default class Floor extends Component {
                                     ref={provided.innerRef}
                                     {...provided.droppableProps}
                                 >
-                                    {this.props.floor.mobs.map( (m,i)=><Mob id={m} key={m} mob_id={m} index={i}></Mob> )}
+                                    {this.props.floor.mobs.map( (m,i)=><Mob id={m} key={m} mob_id={m} index={i}  showName={true} showLevel={true} thumbSize="40px"></Mob> )}
                                     {provided.placeholder}
                                 </MobList>
                             )

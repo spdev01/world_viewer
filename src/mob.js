@@ -17,9 +17,7 @@ const BigContainer = styled.div`
   
 `;
 
-const Img = styled.img`
-width:50px;
-`;
+
 
 
 export default class Mob extends Component {
@@ -35,11 +33,18 @@ export default class Mob extends Component {
               {...provided.dragHandleProps}
               ref={provided.innerRef}
             >
-                <Row className="d-flex flex-row">
-                  <Img src={'/mobs/' + this.curr_mob.id + '.png'}/>
-                  
-                  level:{this.curr_mob.level} <b>{this.curr_mob.name}</b>
-                </Row>
+                <div className="">
+                  <img src={'/mobs/' + this.curr_mob.id + '.png'} style={{height:this.props.thumbSize}}/>
+                  {
+                    this.props.showLevel && 'lvl:' + this.curr_mob.level
+
+                  }                  
+                  {
+                    this.props.showName && this.curr_mob.name
+
+                  }
+                   
+                </div>
                 
           </Container>
           )
